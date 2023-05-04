@@ -1,4 +1,4 @@
-Submit on Gauchospace
+Submit on Canvas
 
 # Acceptance Criteria:
 

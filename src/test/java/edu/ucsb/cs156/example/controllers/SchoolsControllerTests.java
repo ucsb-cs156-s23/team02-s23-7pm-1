@@ -122,7 +122,7 @@ public class SchoolsControllerTests extends ControllerTestCase {
                 verify(schoolsRepository, times(1)).findById(eq(7L));
                 Map<String, Object> json = responseToJson(response);
                 assertEquals("EntityNotFoundException", json.get("type"));
-                assertEquals("School with id 7 not found", json.get("message"));
+                assertEquals("Schools with id 7 not found", json.get("message"));
         }
 
         @WithMockUser(roles = { "USER" })
@@ -230,7 +230,7 @@ public class SchoolsControllerTests extends ControllerTestCase {
                 // assert
                 verify(schoolsRepository, times(1)).findById(15L);
                 Map<String, Object> json = responseToJson(response);
-                assertEquals("School with id 15 not found", json.get("message"));
+                assertEquals("Schools with id 15 not found", json.get("message"));
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
@@ -297,7 +297,7 @@ public class SchoolsControllerTests extends ControllerTestCase {
                 // assert
                 verify(schoolsRepository, times(1)).findById(67L);
                 Map<String, Object> json = responseToJson(response);
-                assertEquals("School with id 67 not found", json.get("message"));
+                assertEquals("Schools with id 67 not found", json.get("message"));
 
         }
 }

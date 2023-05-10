@@ -22,5 +22,5 @@ public class Majors {
 
   private String name;
   private String department;  
-  private String degreePursed;
+  private String degreePursued;
 }

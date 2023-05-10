@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s23/team02-s23-7pm-1
 owner: ucsb-cs156-s23
 repo_name: team02-s23-7pm-1
-pull_requests: [{"author":{"id":"MDQ6VXNlcjc3NTIxMjQ5","is_bot":false,"login":"cameron-barrett","name":"Cameron Barrett"},"headRefName":"Cameron-AddMajorDatabase","number":45,"title":"Cameron add major database","url":"https://github.com/ucsb-cs156-s23/team02-s23-7pm-1/pull/45"},{"author":{"id":"U_kgDOB0-WaA","is_bot":false,"login":"BenCrutt","name":""},"headRefName":"Ben-phoneTable","number":44,"title":"Ben phone table","url":"https://github.com/ucsb-cs156-s23/team02-s23-7pm-1/pull/44"}]
+pull_requests: [{"author":{"id":"MDQ6VXNlcjc3NTIxMjQ5","is_bot":false,"login":"cameron-barrett","name":"Cameron Barrett"},"headRefName":"Cameron-CreateMajorDBTable","number":48,"title":"Cameron create major DB table","url":"https://github.com/ucsb-cs156-s23/team02-s23-7pm-1/pull/48"},{"author":{"id":"U_kgDOB0-WaA","is_bot":false,"login":"BenCrutt","name":""},"headRefName":"Ben-phoneTable","number":44,"title":"Ben phone table","url":"https://github.com/ucsb-cs156-s23/team02-s23-7pm-1/pull/44"}]

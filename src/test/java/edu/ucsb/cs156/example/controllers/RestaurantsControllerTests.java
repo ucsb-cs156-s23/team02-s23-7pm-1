@@ -3,8 +3,8 @@ package edu.ucsb.cs156.example.controllers;
 import edu.ucsb.cs156.example.repositories.UserRepository;
 import edu.ucsb.cs156.example.testconfig.TestConfig;
 import edu.ucsb.cs156.example.ControllerTestCase;
-import edu.ucsb.cs156.example.entities.Schools;
-import edu.ucsb.cs156.example.repositories.SchoolsRepository;
+import edu.ucsb.cs156.example.entities.Restaurant;
+import edu.ucsb.cs156.example.repositories.RestaurantRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,50 +30,50 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(controllers = SchoolsController.class)
+@WebMvcTest(controllers = RestaurantsController.class)
 @Import(TestConfig.class)
-public class SchoolsControllerTests extends ControllerTestCase {
+public class RestaurantsControllerTests extends ControllerTestCase {
 
         @MockBean
-        SchoolsRepository schoolsRepository;
+        RestaurantRepository restaurantRepository;
 
         @MockBean
         UserRepository userRepository;
 
-        // Authorization tests for /api/schools/admin/all
+        // Authorization tests for /api/phones/admin/all
 
         @Test
         public void logged_out_users_cannot_get_all() throws Exception {
-                mockMvc.perform(get("/api/schools/all"))
+                mockMvc.perform(get("/api/restaurants/all"))
                                 .andExpect(status().is(403)); // logged out users can't get all
         }
 
         @WithMockUser(roles = { "USER" })
         @Test
         public void logged_in_users_can_get_all() throws Exception {
-                mockMvc.perform(get("/api/schools/all"))
+                mockMvc.perform(get("/api/restaurants/all"))
                                 .andExpect(status().is(200)); // logged
         }
 
         @Test
         public void logged_out_users_cannot_get_by_id() throws Exception {
-                mockMvc.perform(get("/api/schools?id=7"))
+                mockMvc.perform(get("/api/restaurants?id=7"))
                                 .andExpect(status().is(403)); // logged out users can't get by id
         }
 
-        // Authorization tests for /api/schools/post
+        // Authorization tests for /api/phones/post
         // (Perhaps should also have these for put and delete)
 
         @Test
         public void logged_out_users_cannot_post() throws Exception {
-                mockMvc.perform(post("/api/schools/post"))
+                mockMvc.perform(post("/api/restaurants/post"))
                                 .andExpect(status().is(403));
         }
 
         @WithMockUser(roles = { "USER" })
         @Test
         public void logged_in_regular_users_cannot_post() throws Exception {
-                mockMvc.perform(post("/api/schools/post"))
+                mockMvc.perform(post("/api/restaurants/post"))
                                 .andExpect(status().is(403)); // only admins can post
         }
 
@@ -85,22 +85,22 @@ public class SchoolsControllerTests extends ControllerTestCase {
 
                 // arrange
 
-                Schools school = Schools.builder()
-                                .name("Isla Vista Elementary School")
-                                .district("Goleta Union School District")
-                                .gradeRange("K-6")
+                Restaurant restaurant = Restaurant.builder()
+                                .name("Taco Bell")
+                                .cuisine("Mexican")
+                                .roachCounter(69)
                                 .build();
 
-                when(schoolsRepository.findById(eq(7L))).thenReturn(Optional.of(school));
+                when(restaurantRepository.findById(eq(7L))).thenReturn(Optional.of(restaurant));  // Check not sure why id is 7
 
                 // act
-                MvcResult response = mockMvc.perform(get("/api/schools?id=7"))
+                MvcResult response = mockMvc.perform(get("/api/restaurants?id=7"))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
 
-                verify(schoolsRepository, times(1)).findById(eq(7L));
-                String expectedJson = mapper.writeValueAsString(school);
+                verify(restaurantRepository, times(1)).findById(eq(7L));
+                String expectedJson = mapper.writeValueAsString(restaurant);
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
@@ -111,152 +111,152 @@ public class SchoolsControllerTests extends ControllerTestCase {
 
                 // arrange
 
-                when(schoolsRepository.findById(eq(7L))).thenReturn(Optional.empty());
+                when(restaurantRepository.findById(eq(7L))).thenReturn(Optional.empty());
 
                 // act
-                MvcResult response = mockMvc.perform(get("/api/schools?id=7"))
+                MvcResult response = mockMvc.perform(get("/api/restaurants?id=7"))
                                 .andExpect(status().isNotFound()).andReturn();
 
                 // assert
 
-                verify(schoolsRepository, times(1)).findById(eq(7L));
+                verify(restaurantRepository, times(1)).findById(eq(7L));
                 Map<String, Object> json = responseToJson(response);
                 assertEquals("EntityNotFoundException", json.get("type"));
-                assertEquals("Schools with id 7 not found", json.get("message"));
+                assertEquals("Restaurant with id 7 not found", json.get("message"));
         }
 
         @WithMockUser(roles = { "USER" })
         @Test
-        public void logged_in_user_can_get_all_schools() throws Exception {
+        public void logged_in_user_can_get_all_restaurants() throws Exception {
 
                 // arrange
 
-                Schools school1 = Schools.builder()
-                                .name("Isla Vista Elementary School")
-                                .district("Goleta Union School District")
-                                .gradeRange("K-6")      
+                Restaurant restaurant1 = Restaurant.builder()
+                                .name("Taco Bell")
+                                .cuisine("Mexican")
+                                .roachCounter(69)
                                 .build();
 
-                Schools school2 = Schools.builder()
-                                .name("Carpinteria High School")
-                                .district("Carpinteria Unified School District")
-                                .gradeRange("9-12") 
+                Restaurant restaurant2 = Restaurant.builder()
+                                .name("McDonalds")
+                                .cuisine("American")
+                                .roachCounter(699)
                                 .build();
 
-                ArrayList<Schools> expectedSchools = new ArrayList<>();
-                expectedSchools.addAll(Arrays.asList(school1, school2));
+                ArrayList<Restaurant> expectedRestaurants = new ArrayList<>();
+                expectedRestaurants.addAll(Arrays.asList(restaurant1, restaurant2));
 
-                when(schoolsRepository.findAll()).thenReturn(expectedSchools);
+                when(restaurantRepository.findAll()).thenReturn(expectedRestaurants);
 
                 // act
-                MvcResult response = mockMvc.perform(get("/api/schools/all"))
+                MvcResult response = mockMvc.perform(get("/api/restaurants/all"))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
 
-                verify(schoolsRepository, times(1)).findAll();
-                String expectedJson = mapper.writeValueAsString(expectedSchools);
+                verify(restaurantRepository, times(1)).findAll();
+                String expectedJson = mapper.writeValueAsString(expectedRestaurants);
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void an_admin_user_can_post_a_new_school() throws Exception {
+        public void an_admin_user_can_post_a_new_restaurant() throws Exception {
                 // arrange
 
-                Schools school1 = Schools.builder()
-                                .name("Isla Vista Elementary School")
-                                .district("Goleta Union School District")
-                                .gradeRange("K-6")  
+                Restaurant restaurant1 = Restaurant.builder()
+                                .name("Chipotle")
+                                .cuisine("Mexican")
+                                .roachCounter(69)
                                 .build();
 
-                when(schoolsRepository.save(eq(school1))).thenReturn(school1);
+                when(restaurantRepository.save(eq(restaurant1))).thenReturn(restaurant1);
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                post("/api/schools/post?name=Isla Vista Elementary School&district=Goleta Union School District&gradeRange=K-6")
+                                post("/api/restaurants/post?name=Chipotle&cuisine=Mexican&roachCounter=69")
                                                 .with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
-                verify(schoolsRepository, times(1)).save(school1);
-                String expectedJson = mapper.writeValueAsString(school1);
+                verify(restaurantRepository, times(1)).save(restaurant1);
+                String expectedJson = mapper.writeValueAsString(restaurant1);
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void admin_can_delete_a_school() throws Exception {
+        public void admin_can_delete_a_restaurant() throws Exception {
                 // arrange
 
-                Schools school1 = Schools.builder()
-                                .name("Isla Vista Elementary School")
-                                .district("Goleta Union School District")
-                                .gradeRange("K-6")  
+                Restaurant restaurant = Restaurant.builder()
+                                .name("Taco Bell")
+                                .cuisine("Mexican")
+                                .roachCounter(69)
                                 .build();
 
-                when(schoolsRepository.findById(eq(15L))).thenReturn(Optional.of(school1));
+                when(restaurantRepository.findById(eq(15L))).thenReturn(Optional.of(restaurant));
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                delete("/api/schools?id=15")
+                                delete("/api/restaurants?id=15")
                                                 .with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
-                verify(schoolsRepository, times(1)).findById(15L);
-                verify(schoolsRepository, times(1)).delete(any());
+                verify(restaurantRepository, times(1)).findById(15L);
+                verify(restaurantRepository, times(1)).delete(any());
 
                 Map<String, Object> json = responseToJson(response);
-                assertEquals("School with id 15 deleted", json.get("message"));
+                assertEquals("Restaurant with id 15 deleted", json.get("message"));
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void admin_tries_to_delete_non_existant_school_and_gets_right_error_message()
+        public void admin_tries_to_delete_non_existant_restaurant_and_gets_right_error_message()
                         throws Exception {
                 // arrange
 
-                when(schoolsRepository.findById(eq(15L))).thenReturn(Optional.empty());
+                when(restaurantRepository.findById(eq(15L))).thenReturn(Optional.empty());
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                delete("/api/schools?id=15")
+                                delete("/api/restaurants?id=15")
                                                 .with(csrf()))
                                 .andExpect(status().isNotFound()).andReturn();
 
                 // assert
-                verify(schoolsRepository, times(1)).findById(15L);
+                verify(restaurantRepository, times(1)).findById(15L);
                 Map<String, Object> json = responseToJson(response);
-                assertEquals("Schools with id 15 not found", json.get("message"));
+                assertEquals("Restaurant with id 15 not found", json.get("message"));
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void admin_can_edit_an_existing_school() throws Exception {
+        public void admin_can_edit_an_existing_restaurant() throws Exception {
                 // arrange
 
-                Schools schoolOrig = Schools.builder()
-                                .name("Isla Vista Elementary School")
-                                .district("Goleta Union School District")
-                                .gradeRange("K-6") 
+                Restaurant restaurantOrig = Restaurant.builder().id(67L)
+                                .name("Chipotle")
+                                .cuisine("Mexican")
+                                .roachCounter(72)
                                 .build();
 
-                Schools schoolEdited = Schools.builder()
-                                .name("Goleta Valley Junior High School")
-                                .district("Santa Barbara Unified School District")
-                                .gradeRange("7-8") 
+                Restaurant restaurantEdited = Restaurant.builder().id(67L)
+                                .name("Chipotle")
+                                .cuisine("Mexican")
+                                .roachCounter(72)
                                 .build();
 
-                String requestBody = mapper.writeValueAsString(schoolEdited);
+                String requestBody = mapper.writeValueAsString(restaurantEdited);
 
-                when(schoolsRepository.findById(eq(67L))).thenReturn(Optional.of(schoolOrig));
+                when(restaurantRepository.findById(eq(67L))).thenReturn(Optional.of(restaurantOrig));
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                put("/api/schools?id=67")
+                                put("/api/restaurants?id=67")
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .characterEncoding("utf-8")
                                                 .content(requestBody)
@@ -264,30 +264,31 @@ public class SchoolsControllerTests extends ControllerTestCase {
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
-                verify(schoolsRepository, times(1)).findById(67L);
-                verify(schoolsRepository, times(1)).save(schoolEdited); // should be saved with correct user
+                verify(restaurantRepository, times(1)).findById(67L);
+                verify(restaurantRepository, times(1)).save(restaurantEdited); // should be saved with correct user
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(requestBody, responseString);
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void admin_cannot_edit_school_that_does_not_exist() throws Exception {
+        public void admin_cannot_edit_restaurant_that_does_not_exist() throws Exception {
                 // arrange
 
-                Schools schoolEdited = Schools.builder()
-                                .name("Isla Vista Elementary School")
-                                .district("Goleta Union School District")
-                                .gradeRange("K-6") 
+                Restaurant editedRestaurant = Restaurant.builder()
+                                .name("Red Smoke Grill")
+                                .cuisine("American")
+                                .roachCounter(0)
                                 .build();
 
-                String requestBody = mapper.writeValueAsString(schoolEdited);
 
-                when(schoolsRepository.findById(eq(67L))).thenReturn(Optional.empty());
+                String requestBody = mapper.writeValueAsString(editedRestaurant);
+
+                when(restaurantRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                put("/api/schools?id=67")
+                                put("/api/restaurants?id=67")
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .characterEncoding("utf-8")
                                                 .content(requestBody)
@@ -295,9 +296,9 @@ public class SchoolsControllerTests extends ControllerTestCase {
                                 .andExpect(status().isNotFound()).andReturn();
 
                 // assert
-                verify(schoolsRepository, times(1)).findById(67L);
+                verify(restaurantRepository, times(1)).findById(67L);
                 Map<String, Object> json = responseToJson(response);
-                assertEquals("Schools with id 67 not found", json.get("message"));
+                assertEquals("Restaurant with id 67 not found", json.get("message"));
 
         }
 }

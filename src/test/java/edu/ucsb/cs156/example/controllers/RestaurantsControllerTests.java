@@ -238,16 +238,16 @@ public class RestaurantsControllerTests extends ControllerTestCase {
         public void admin_can_edit_an_existing_restaurant() throws Exception {
                 // arrange
 
-                Restaurant restaurantOrig = Restaurant.builder()
+                Restaurant restaurantOrig = Restaurant.builder().id(67L)
                                 .name("Chipotle")
                                 .cuisine("Mexican")
                                 .roachCounter(72)
                                 .build();
 
-                Restaurant restaurantEdited = Restaurant.builder()
-                                .name("Panda Express")
-                                .cuisine("Chinese")
-                                .roachCounter(738)
+                Restaurant restaurantEdited = Restaurant.builder().id(67L)
+                                .name("Chipotle")
+                                .cuisine("Mexican")
+                                .roachCounter(72)
                                 .build();
 
                 String requestBody = mapper.writeValueAsString(restaurantEdited);

@@ -32,6 +32,7 @@ import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = BooksController.class)
 @Import(TestConfig.class)
+
 public class BooksControllerTests extends ControllerTestCase {
 
         @MockBean

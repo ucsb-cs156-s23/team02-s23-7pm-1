@@ -273,7 +273,7 @@ public class BooksControllerTests extends ControllerTestCase {
         public void admin_cannot_edit_book_that_does_not_exist() throws Exception {
                 // arrange
 
-                Book bookEdited = Book.builder()
+                Book editedBook = Book.builder()
                                 .title("The Shahnameh")
                                 .author("Abu Al-Qasim Ferdowsi")
                                 .genre("Ancient Fantasy")

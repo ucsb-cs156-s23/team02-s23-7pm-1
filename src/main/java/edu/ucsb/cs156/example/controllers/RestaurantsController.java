@@ -98,9 +98,9 @@ public class RestaurantsController extends ApiController {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Restaurant.class, id));
 
-        restaurant.setName(restaurant.getName());
-        restaurant.setCuisine(restaurant.getCuisine());
-        restaurant.setRoachCounter(restaurant.getRoachCounter());
+        restaurant.setName(incoming.getName());
+        restaurant.setCuisine(incoming.getCuisine());
+        restaurant.setRoachCounter(incoming.getRoachCounter());
 
         restaurantRepository.save(restaurant);
 

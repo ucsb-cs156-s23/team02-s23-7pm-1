@@ -245,7 +245,7 @@ public class MajorsControllerTests extends ControllerTestCase {
                 Major majorEdited = Major.builder()
                                 .name("Computer Engineering")
                                 .department("COE")
-                                .degreePursued("B.S.")
+                                .degreePursued("M.S.")
                                 .build();
 
                 String requestBody = mapper.writeValueAsString(majorEdited);

@@ -241,12 +241,12 @@ public class RestaurantsControllerTests extends ControllerTestCase {
                 Restaurant restaurantOrig = Restaurant.builder().id(67L)
                                 .name("Chipotle")
                                 .cuisine("Mexican")
-                                .roachCounter(72)
+                                .roachCounter(69)
                                 .build();
 
                 Restaurant restaurantEdited = Restaurant.builder().id(67L)
-                                .name("Chipotle")
-                                .cuisine("Mexican")
+                                .name("Taco Bell")
+                                .cuisine("American")
                                 .roachCounter(72)
                                 .build();
 
